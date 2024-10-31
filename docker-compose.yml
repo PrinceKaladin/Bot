@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    volumes:
+      - .:/usr/src/app  # Позволяет синхронизировать изменения локально с контейнером
+    environment:
+      - NODE_ENV=production  # Установите необходимые переменные окружения, если нужно
+    restart: always  # Перезапускать контейнер в случае сбоя
