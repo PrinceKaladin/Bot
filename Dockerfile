@@ -1,24 +1,17 @@
-# Используем образ Node.js версии 20 на базе Alpine
 FROM node:20-alpine
 
-# Устанавливаем рабочую директорию
-WORKDIR /app
+# Рабочая директория Render
+WORKDIR /opt/render/project/src
 
-# Копируем package.json и package-lock.json (если он есть)
-COPY package*.json ./
+# Создаем package.json с нужными зависимостями
+RUN npm init -y
+RUN npm install axios firebase node-telegram-bot-api
 
-# Устанавливаем зависимости
-RUN npm install
-
-# Копируем остальные файлы
+# Копируем все файлы проекта
 COPY . .
 
-# Указываем порт
 EXPOSE 3000
-
-# Задаем переменные окружения
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Команда для запуска приложения
 CMD ["node", "bot.js"]
