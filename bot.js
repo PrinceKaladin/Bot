@@ -70,16 +70,18 @@ async function handleInvCommand(id1, userId, chatId) {
 
         // Проверка существования userId в friends
         const friendRef = ref(database, `users/${id1}/friends/${userId}`);
+        const frienddb= ref(database, `users/${userId}`);
+        const frienddbdb=await get(frienddb);
         const friendSnapshot = await get(friendRef);
 
         if (friendSnapshot.exists()) {
-            console.log(`User ID ${userId} already exists under code ${id1}. No action taken.`);
-            bot.sendMessage(chatId, `Вы уже добавлены в друзья пользователя с ID ${id1}.`);
-        } else {
+            console.log();
+            bot.sendMessage(chatId, `You already exists in game. No action taken.`);
+        } else if(!frienddbdb.exists()) {
             // Добавляем userId в friends
             await set(friendRef, "1"); // Записываем значение "1" для userId
             console.log(`User ID ${userId} saved successfully under code ${id1}.`);
-            bot.sendMessage(chatId, `Вы получили +3 Star Vouchers!`);
+            bot.sendMessage(chatId, `You got +3 Star Vouchers!`);
         }
     } catch (error) {
         console.error("Ошибка при добавлении пользователя:", error);
@@ -214,7 +216,11 @@ async function updateFriendsData() {
                 const friendData = friendSnapshot.val();
 
                 // Сохраняем данные в формате name:coins
-                friendsData[friendData.name] = friendData.coins;
+                if(friendData.friendscount && friendData.friendscount!="undefined"){
+                friendsData[friendData.name] = friendData.coins+";"+friendData.friendscount;
+                }
+                else{friendsData[friendData.name] = friendData.coins+";"+"0"}
+
               }
             } catch (error) {
               console.error(`Ошибка при получении данных друга с ID ${friendId}:`, error);
