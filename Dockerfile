@@ -1,17 +1,18 @@
 FROM node:20-alpine
 
-# Рабочая директория Render
+# Устанавливаем рабочую директорию
 WORKDIR /opt/render/project/src
 
-# Создаем package.json с нужными зависимостями
-RUN npm init -y
-RUN npm install axios firebase node-telegram-bot-api
+# Копируем package.json и устанавливаем зависимости
+COPY package*.json ./
+RUN npm install
 
-# Копируем все файлы проекта
+# Копируем остальные файлы проекта
 COPY . .
 
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
+# Запускаем бота
 CMD ["node", "bot.js"]
